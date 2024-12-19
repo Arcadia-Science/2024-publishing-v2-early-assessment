@@ -10,6 +10,8 @@ Metrics analyzed:
 
 Notes:
 - Flesch scores are stored as percentage strings for internal display at Arcadia (e.g., "42.5%")
+- One in-progress pub is omitted from these basic pub stats because we did not have a reliable start
+date for it at the time of publication
 - NaN handling:
   - Uses numpy.nanmedian/nanmean for workday calculations
   - Filters NaN values from FRE before analysis

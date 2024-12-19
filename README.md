@@ -25,6 +25,8 @@ This repository contains the data and scripts necessary to replicate the claims 
 > This script will return '1' for this service, although it has been requested twice. This is because that service can be
 > requested independent of a pub.
 
+> Note: although we have eight v2.0 pubs in progress at the time of publication, we have omitted it here because we do not have an accurate kickoff date at this time. This means the script will display summary statistics for seven pubs.
+
 Analyzes basic publication metrics including:
 - Version comparison (v1.0 vs v2.0)
 - Time to completion

@@ -2,6 +2,9 @@
 Analyzes and visualizes comment impact data with configurable grouping and display options. Running
 script by default will reproduce the same style of visualization as seen in the pub.
 
+NOTE: The results reported in the pub were run on earlier data than what is reported by running
+this script. You may notice small discrepancies.
+
 Features:
 - Multiple visualization options (pie, donut, bar charts)
 - Configurable impact grouping methods
