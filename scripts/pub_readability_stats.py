@@ -1,10 +1,6 @@
 """
 This script takes a research.arcadiascience.com URL (without version number) and scrapes the page
-for its main content. It then calculates various readability metrics using textstat.
-
-NOTE: we have seen some errors with textstat's implement of syllable_count(), especially with
-scientific content. Readability metrics that utilize syllable count as part of their calculation,
-such as FRE, may be incorrect.
+for its main content. It then calculates various readability metrics using scireadability.
 """
 
 import argparse
@@ -14,7 +10,7 @@ import urllib.robotparser
 
 import justext
 import requests
-import textstat
+import scireadability
 from bs4 import BeautifulSoup
 
 
@@ -99,16 +95,16 @@ def print_readability_metrics(text):
     print(f"Text length: {len(text)} characters")
 
     metrics = [
-        ("Flesch Reading Ease", textstat.flesch_reading_ease(text)),
-        ("Flesch-Kincaid Grade", textstat.flesch_kincaid_grade(text)),
-        ("SMOG Index", textstat.smog_index(text)),
-        ("Coleman-Liau Index", textstat.coleman_liau_index(text)),
-        ("Automated Readability Index", textstat.automated_readability_index(text)),
-        ("Dale-Chall Readability Score", textstat.dale_chall_readability_score(text)),
-        ("Readability Consensus", textstat.text_standard(text, float_output=True)),
-        ("Word Count", textstat.lexicon_count(text)),
-        ("Sentence Count", textstat.sentence_count(text)),
-        ("Average Syllables per Word", textstat.avg_syllables_per_word(text))
+        ("Flesch Reading Ease", scireadability.flesch_reading_ease(text)),
+        ("Flesch-Kincaid Grade", scireadability.flesch_kincaid_grade(text)),
+        ("SMOG Index", scireadability.smog_index(text)),
+        ("Coleman-Liau Index", scireadability.coleman_liau_index(text)),
+        ("Automated Readability Index", scireadability.automated_readability_index(text)),
+        ("Dale-Chall Readability Score", scireadability.dale_chall_readability_score(text)),
+        ("Readability Consensus", scireadability.text_standard(text, float_output=True)),
+        ("Word Count", scireadability.lexicon_count(text)),
+        ("Sentence Count", scireadability.sentence_count(text)),
+        ("Average Syllables per Word", scireadability.avg_syllables_per_word(text))
     ]
 
     for metric_name, value in metrics:

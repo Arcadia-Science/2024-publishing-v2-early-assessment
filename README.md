@@ -54,7 +54,7 @@ Processes publication feedback survey responses:
 
 ### `pub_readability_stats.py`
 
->Note: we noticed that textstat's standard `syllable_count` implemention often incorrectly assigns the number of syllables to a word, especially for scientific words that appear frequently in our pubs. We believe the numbers are valuable relative to each other, but may not reflect the 'true' FRE or other scores that use syllable count. We will be updating this analysis in the future with a custom `syllable_count` implementation.  
+>Note: we used [scireadability](https://github.com/robert-roth/scireadability), a derivative of textstat with more accurate syllable counting for our pubs.
 
 Web scraping tool, specifically for Arcadia Science pubs, for readability analysis:
 - Multiple readability metrics (Flesch, SMOG, Coleman-Liau, etc.)
