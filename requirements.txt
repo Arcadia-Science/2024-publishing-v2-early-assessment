@@ -15,8 +15,10 @@ matplotlib==3.10.0
 numpy==2.2.0
 packaging==24.2
 pandas==2.2.3
-requests==2.32.3
-setuptools==75.6.0
+requests==2.32.4
+setuptools==78.1.1
 six==1.17.0
-scireadability==0.6.4
-urllib3==2.2.3
+scireadability==2.0.1
+urllib3==2.5.0
+scipy~=1.16.1
+statsmodels~=0.14.5
