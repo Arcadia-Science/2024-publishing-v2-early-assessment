@@ -76,7 +76,7 @@ These tests are applied to:
 - Time to publication
 - Flesch Reading Ease
 
-### `scripts/update_202509/feedback_form_basic_stats.py`
+### `scripts/202509_update/feedback_form_basic_stats.py`
 Analyzes responses from the feedback form to compare reader perceptions of v1.0 and v2.0 pubs. The script prints contingency tables (counts and percentages) and test results for each question. Tests include:
 
 - Chi-squared (χ2) test of independence for each question
