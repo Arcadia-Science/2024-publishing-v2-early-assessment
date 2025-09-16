@@ -139,6 +139,6 @@ if __name__ == "__main__":
     filepath = (
         sys.argv[1]
         if len(sys.argv) > 1
-        else ("../../data/original_pub/pub_feedback_form_responses.csv")
+        else ("../../data/202412_original_pub/pub_feedback_form_responses.csv")
     )
     analyze_feedback(filepath)

@@ -404,6 +404,6 @@ if __name__ == "__main__":
     filepath = (
         sys.argv[1]
         if len(sys.argv) > 1
-        else "../../data/original_pub/basic_pub_stats.csv"
+        else "../../data/202412_original_pub/basic_pub_stats.csv"
     )
     analyze_publications(filepath)

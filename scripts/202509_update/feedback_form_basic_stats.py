@@ -2,6 +2,15 @@ import pandas as pd
 from scipy.stats import chi2_contingency
 from statsmodels.stats.multitest import multipletests
 
+UPDATED_RESPONSES_FILE = "data/202509_update/pub_feedback_form_responses.csv"
+
+FEEDBACK_FORM_QUESTIONS = [
+    "How straightforward was this pub?",
+    "Could this pub be useful in your own work?",
+    "Were you able to find all the information you'd need to assess or reuse this work?",
+    "Does the evidence presented support the claims?",
+]
+
 pd.set_option("display.max_columns", None)
 
 
@@ -17,19 +26,12 @@ def analyze_version_differences_v2(filepath):
     print("Feedback responses: v1.0 vs. v2.0 pubs")
     print("=" * 80)
 
-    questions = [
-        "How straightforward was this pub?",
-        "Could this pub be useful in your own work?",
-        "Were you able to find all the information you'd need to assess or reuse this work?",
-        "Does the evidence presented support the claims?",
-    ]
-
     # --- 1. Run tests and collect raw p-values ---
     analysis_results = []
-    for question in questions:
+    for question in FEEDBACK_FORM_QUESTIONS:
         counts_table = pd.crosstab(df["Publishing version (from Pub)"], df[question])
 
-        chi2, p_raw, _, expected = chi2_contingency(counts_table)
+        _, p_raw, _, _ = chi2_contingency(counts_table)
 
         analysis_results.append(
             {
@@ -88,6 +90,4 @@ def analyze_version_differences_v2(filepath):
 
 
 if __name__ == "__main__":
-    UPDATED_RESPONSES_FILE = "../../data/update_092025/pub_feedback_form_responses.csv"
-
     analyze_version_differences_v2(UPDATED_RESPONSES_FILE)

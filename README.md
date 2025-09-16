@@ -1,8 +1,7 @@
 # Publishing v2.0 early assessment tools
 
 This respository accompanies the Arcadia Science pub, "[Early update on Arcadia publishing 2.0: Scientists are in charge, speed is an issue](https://doi.org/10.57844/arcadia-2a89-51c1)."
-It contains the raw data as well as the scripts that we used to analyze and visualize these data for the original pub
-and also contains the data and scripts related to our September 2025 update to the pub.
+It includes raw data and analysis scripts for both the original publication and the September 2025 update.
 
 ***
 
@@ -20,7 +19,7 @@ This repository contains the data and scripts necessary to replicate the claims 
 
 ## Repository structure
 This repo contains two main directories: `data` and `scripts`. Within these directories, there are subdirectories for the
-`original_pub` and the `update_092025` update.
+`122024_original_pub` and the `092025_update` update.
 
 ## Scripts
 
@@ -98,19 +97,19 @@ These tests are applied to reader responses for:
 There are two subdirectories within `data`. The subdirectory `original_pub` contains the data
 used in the original analysis for "Early update on Arcadia publishing 2.0: Scientists are in charge, speed is an issue." 
 The subdirectory `update_092025` contains the data used to update the pub and report additional results from the subsequent eight
-months of publishing v2.0.
+months of publishing v2.0. The CSVs for the original pub were exported in December 2024, and the CSVs for the update were exported in September 2025.
 
 ### `basic_pub_stats.csv`
 
 > Note that we originally used scireadability 0.6.4, which was yanked. Some Flesch Reading Ease scores were recalculated with 
-> 2.0.1, which may have shifted the values slightly. This does not affect our takeaways.
+> 2.0.1, which shifted the values. This does not affect our takeaways.
 
 Basic pub information, including:
 - Pub status
 - Workdays in progress
 - Flesch Reading Ease scores
-- Number of pub team requests (this is omitted in `update_092025`)
-- List of pub team requests (this is omitted in `update_092025`)
+- Number of pub team requests (this is omitted in `202509_update`)
+- List of pub team requests (this is omitted in `202509_update`)
 
 ### `comment_impacts.csv`
 > This file is omitted in update_092025 as we no longer require employees to rate all comments by impact
@@ -149,6 +148,14 @@ pip install -r requirements.txt
 ## Usage
 
 Most of the scripts are designed to work with the provided CSV files as shown below. The scripts either hardcode the relevant data files they use, or those files are the default. Configurable options are described in docstrings in the specific scripts.
+
+>Scripts related to the 2025-09 update run with hardcoded CSV files by default.
+
+```sh
+python scripts/202412_original_pub/calculate_basic_pub_stats.py data/202412_original_pub/basic_pub_stats.csv
+python scripts/202412_original_pub/comment_impacts.py data/202412_original_pub/comment_impacts.csv
+python scripts/202412_original_pub/feedback_form_basic_stats.py data/202412_original_pub/pub_feedback_form_responses.csv
+```
 
 The `pub_readability_stats.py` script requires a URL to an Arcadia Science pub. 
 These URLs have the format `https://research.arcadiascience.com/pub/<pub-slug>`.

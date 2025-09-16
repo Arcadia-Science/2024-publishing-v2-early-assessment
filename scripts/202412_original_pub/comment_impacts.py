@@ -328,9 +328,9 @@ def main():
         "csv_path",
         type=str,
         nargs="?",
-        default="../../data/original_pub/comment_impacts.csv",
+        default="../../data/202412_original_pub/comment_impacts.csv",
         help="Path to the CSV file (default: "
-        "../../data/original_pub/comment_impacts.csv)",
+        "../../data/202412_original_pub/comment_impacts.csv)",
     )
     parser.add_argument(
         "--grouping",

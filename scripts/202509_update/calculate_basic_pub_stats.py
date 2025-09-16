@@ -2,15 +2,17 @@ import pandas as pd
 from scipy import stats
 import numpy as np
 
+CURRENT_DATA_FILE = "data/202509_update/basic_pub_stats.csv"
+ORIGINAL_DATA_FILE = "data/202412_original_pub/basic_pub_stats.csv"
 
 # --- Helper functions ---
 
 
 def calculate_descriptive_stats(data_series):
     """Calculates descriptive stats: n, mean/SD, 95% CI for mean, median/IQR."""
-    s = pd.to_numeric(data_series, errors="coerce").dropna()
+    series = pd.to_numeric(data_series, errors="coerce").dropna()
 
-    n = len(s)
+    n = len(series)
     if n < 2:
         return {
             "n": n,
@@ -23,9 +25,9 @@ def calculate_descriptive_stats(data_series):
             "q3": np.nan,
         }
 
-    mean = s.mean()
-    std = s.std(ddof=1)
-    sem = stats.sem(s, ddof=1)
+    mean = series.mean()
+    std = series.std(ddof=1)
+    sem = stats.sem(series, ddof=1)
 
     ci_95 = stats.t.interval(0.95, df=n - 1, loc=mean, scale=sem)
 
@@ -35,30 +37,34 @@ def calculate_descriptive_stats(data_series):
         "std": std,
         "sem": sem,
         "ci_95": ci_95,
-        "median": s.median(),
-        "q1": s.quantile(0.25),
-        "q3": s.quantile(0.75),
+        "median": series.median(),
+        "q1": series.quantile(0.25),
+        "q3": series.quantile(0.75),
     }
 
 
 def print_summary_stats(title, stats_dict, show_ci=True):
     """Pretty-print stats dictionary."""
-    print(f"\n# {title} (n={stats_dict['n']}):")
-    if stats_dict["n"] > 1:
-        print(f"  - Mean: {stats_dict['mean']:.1f}, SD: {stats_dict['std']:.1f}")
-        print(
-            f"  - Median: {stats_dict['median']:.1f}, IQR: [{stats_dict['q1']:.1f}, "
-            f"{stats_dict['q3']:.1f}]"
-        )
+    n = stats_dict["n"]
+    print(f"\n# {title} (n={n}):")
+
+    if n > 1:
+        mean, std = stats_dict["mean"], stats_dict["std"]
+        median, q1, q3 = stats_dict["median"], stats_dict["q1"], stats_dict["q3"]
+        ci_low, ci_high = stats_dict["ci_95"]
+
+        print(f"  - Mean: {mean:.1f}, SD: {std:.1f}")
+        print(f"  - Median: {median:.1f}, IQR: [{q1:.1f}, {q3:.1f}]")
         if show_ci:
-            print(
-                f"  - 95% CI for mean: [{stats_dict['ci_95'][0]:.1f}, {stats_dict['ci_95'][1]:.1f}]"
-            )
+            print(f"  - 95% CI for mean: [{ci_low:.1f}, {ci_high:.1f}]")
 
 
 def compare_groups(series1, series2):
     """
-    Performs Welch's t-test (means) and a rank-sum (Mann–Whitney U) robustness check.
+    Compares two groups with parametric and non-parametric tests:
+    - Welch's t-test (compare means of the two group)
+    - Mann-Whitney U as a robustness check (to see if the distributions are different)
+
     Returns formatted p-values.
     """
     s1 = pd.to_numeric(series1, errors="coerce").dropna()
@@ -73,7 +79,7 @@ def compare_groups(series1, series2):
     return {"welch_t_p_value": ttest_res.pvalue, "mwu_p_value": mwu_res.pvalue}
 
 
-def calculate_effect_sizes(series1, series2):
+def calculate_mean_difference_effects(series1, series2):
     """Calculates Hedges' g and the 95% CI for the difference in means (Welch)."""
     s1 = pd.to_numeric(series1, errors="coerce").dropna()
     s2 = pd.to_numeric(series2, errors="coerce").dropna()
@@ -88,6 +94,10 @@ def calculate_effect_sizes(series1, series2):
     j = 1 - 3 / (4 * (n1 + n2) - 9)
     hedges_g = d * j
 
+    # Calculate Glass's delta (non-equal variance)
+    sd1 = np.sqrt(v1)  # sd1 is v1.0's SD
+    glass_delta = (m1 - m2) / sd1
+
     # 95% CI for the difference in means (Welch–Satterthwaite)
     se_diff = np.sqrt(v1 / n1 + v2 / n2)
     df_welch = (v1 / n1 + v2 / n2) ** 2 / (
@@ -97,13 +107,17 @@ def calculate_effect_sizes(series1, series2):
     mean_diff = m1 - m2
     ci_diff = (mean_diff - t_crit * se_diff, mean_diff + t_crit * se_diff)
 
-    return {"hedges_g": hedges_g, "mean_diff_ci_95": ci_diff}
+    return {
+        "hedges_g": hedges_g,
+        "glass_delta": glass_delta,
+        "mean_diff_ci_95": ci_diff,
+    }
 
 
 def main_v2_analysis(current_filepath, original_filepath):
     """
     Analyze pub data and print summaries, effect sizes, and non-parametric checks.
-    In-progress (censored) times are descriptive only.
+    In-progress (right censored) times are descriptive only.
     """
 
     df_current = pd.read_csv(current_filepath)
@@ -148,7 +162,7 @@ def main_v2_analysis(current_filepath, original_filepath):
     # --- 3. Comparison: v1.0 vs v2.0 ---
     print("\n--- Comparison (workdays): v1.0 vs v2.0 (published) ---")
     comparisons = compare_groups(workdays_v1, workdays_v2)
-    effects = calculate_effect_sizes(workdays_v1, workdays_v2)
+    effects = calculate_mean_difference_effects(workdays_v1, workdays_v2)
     print(f"  - Welch's t-test p-value: {comparisons['welch_t_p_value']:.4f}")
     print(f"  - Mann-Whitney U p-value: {comparisons['mwu_p_value']:.4f}")
     print(f"  - Effect size (Hedges' g): {effects['hedges_g']:.3f}")
@@ -176,10 +190,11 @@ def main_v2_analysis(current_filepath, original_filepath):
 
     print("\n# Comparison: initial vs. new v2.0")
     comparisons_v2 = compare_groups(workdays_initial_v2, workdays_new_v2)
-    effects_v2 = calculate_effect_sizes(workdays_initial_v2, workdays_new_v2)
+    effects_v2 = calculate_mean_difference_effects(workdays_initial_v2, workdays_new_v2)
     print(f"  - Welch's t-test p-value: {comparisons_v2['welch_t_p_value']:.4f}")
     print(f"  - Mann-Whitney U p-value: {comparisons_v2['mwu_p_value']:.4f}")
     print(f"  - Effect size (Hedges' g): {effects_v2['hedges_g']:.3f}")
+    print(f"  - Effect size (Glass's delta): {effects_v2['glass_delta']:.3f}")
     print(
         f"  - 95% CI for mean difference: [{effects_v2['mean_diff_ci_95'][0]:.1f}, "
         f"{effects_v2['mean_diff_ci_95'][1]:.1f}] workdays"
@@ -214,7 +229,7 @@ def main_v2_analysis(current_filepath, original_filepath):
 
         print("\n# Comparison: FRE v1 vs v2")
         comparisons_fre = compare_groups(fre_v1, fre_v2)
-        effects_fre = calculate_effect_sizes(fre_v1, fre_v2)
+        effects_fre = calculate_mean_difference_effects(fre_v1, fre_v2)
         print(f"  - Welch's t-test p-value: {comparisons_fre['welch_t_p_value']:.4f}")
         print(f"  - Mann-Whitney U p-value: {comparisons_fre['mwu_p_value']:.4f}")
         print(f"  - Effect size (Hedges' g): {effects_fre['hedges_g']:.3f}")
@@ -222,7 +237,4 @@ def main_v2_analysis(current_filepath, original_filepath):
 
 
 if __name__ == "__main__":
-    current_data_file = "../../data/update_092025/basic_pub_stats.csv"
-    original_data_file = "../../data/original_pub/basic_pub_stats.csv"
-
-    main_v2_analysis(current_data_file, original_data_file)
+    main_v2_analysis(CURRENT_DATA_FILE, ORIGINAL_DATA_FILE)
