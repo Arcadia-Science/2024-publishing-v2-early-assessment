@@ -96,7 +96,7 @@ These tests are applied to reader responses for:
 
 There are two subdirectories within `data`. The subdirectory `original_pub` contains the data
 used in the original analysis for "Early update on Arcadia publishing 2.0: Scientists are in charge, speed is an issue." 
-The subdirectory `update_202509` contains the data used to update the pub and report additional results from the subsequent eight
+The subdirectory `202509_update` contains the data used to update the pub and report additional results from the subsequent eight
 months of publishing v2.0. The CSVs for the original pub were exported in December 2024, and the CSVs for the update were exported in September 2025.
 
 ### `basic_pub_stats.csv`
