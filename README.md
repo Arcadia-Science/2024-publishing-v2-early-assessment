@@ -112,7 +112,7 @@ Basic pub information, including:
 - List of pub team requests (this is omitted in `202509_update`)
 
 ### `comment_impacts.csv`
-> This file is omitted in update_202509 as we no longer require employees to rate all comments by impact
+> This file is omitted in 202509_update as we no longer require employees to rate all comments by impact
 
 Comment data containing:
 - Impact categorization
