@@ -19,7 +19,7 @@ This repository contains the data and scripts necessary to replicate the claims 
 
 ## Repository structure
 This repo contains two main directories: `data` and `scripts`. Within these directories, there are subdirectories for the
-`122024_original_pub` and the `092025_update` update.
+`202412_original_pub` and the `202509_update` update.
 
 ## Scripts
 
@@ -64,7 +64,7 @@ Web scraping tool, specifically for Arcadia Science pubs, for readability analys
 - Multiple readability metrics (Flesch, SMOG, Coleman-Liau, etc.)
 - Content extraction and cleaning
 
-### `scripts/update_092025/calculate_basic_pub_stats.py`
+### `scripts/update_202509/calculate_basic_pub_stats.py`
 
 Analyzes basic pub stats, compares them to v1.0 and to the initial v2.0 pubs that we reported on in the original pub, and prints them. Tests include:
 - Calculates and prints descriptive stats (n, mean/SD, 95% CI for mean, median/IQR)
@@ -76,7 +76,7 @@ These tests are applied to:
 - Time to publication
 - Flesch Reading Ease
 
-### `scripts/update_092025/feedback_form_basic_stats.py`
+### `scripts/update_202509/feedback_form_basic_stats.py`
 Analyzes responses from the feedback form to compare reader perceptions of v1.0 and v2.0 pubs. The script prints contingency tables (counts and percentages) and test results for each question. Tests include:
 
 - Chi-squared (χ2) test of independence for each question
@@ -96,7 +96,7 @@ These tests are applied to reader responses for:
 
 There are two subdirectories within `data`. The subdirectory `original_pub` contains the data
 used in the original analysis for "Early update on Arcadia publishing 2.0: Scientists are in charge, speed is an issue." 
-The subdirectory `update_092025` contains the data used to update the pub and report additional results from the subsequent eight
+The subdirectory `update_202509` contains the data used to update the pub and report additional results from the subsequent eight
 months of publishing v2.0. The CSVs for the original pub were exported in December 2024, and the CSVs for the update were exported in September 2025.
 
 ### `basic_pub_stats.csv`
@@ -112,7 +112,7 @@ Basic pub information, including:
 - List of pub team requests (this is omitted in `202509_update`)
 
 ### `comment_impacts.csv`
-> This file is omitted in update_092025 as we no longer require employees to rate all comments by impact
+> This file is omitted in update_202509 as we no longer require employees to rate all comments by impact
 
 Comment data containing:
 - Impact categorization
