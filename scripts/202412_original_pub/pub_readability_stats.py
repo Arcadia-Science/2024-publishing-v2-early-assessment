@@ -20,10 +20,10 @@ def is_allowed_by_robots(url):
     robots_url = urllib.parse.urljoin(url, "/robots.txt")
     try:
         print(f"Fetching robots.txt from: {robots_url}")
-        response = requests.get(robots_url, headers={'User-Agent': 'Mozilla/5.0'})
+        response = requests.get(robots_url, headers={"User-Agent": "Mozilla/5.0"})
         response.raise_for_status()
         print(f"Successfully fetched robots.txt (status code: {response.status_code})")
-        rp.parse(response.content.decode('utf-8').splitlines())
+        rp.parse(response.content.decode("utf-8").splitlines())
         return rp.can_fetch("*", url)
     except Exception as e:
         print(f"Error parsing robots.txt: {e}")
@@ -36,32 +36,32 @@ def clean_text(html_content):
 
     try:
         # Check for and remove BOM
-        if html_content.startswith(codecs.BOM_UTF8.decode('utf-8')):
-            html_content = html_content[len(codecs.BOM_UTF8):]
+        if html_content.startswith(codecs.BOM_UTF8.decode("utf-8")):
+            html_content = html_content[len(codecs.BOM_UTF8) :]
 
         # Parse the HTML content with BeautifulSoup
-        soup = BeautifulSoup(html_content, 'html.parser')
+        soup = BeautifulSoup(html_content, "html.parser")
 
         # Remove the entire section-content div
-        comment_section = soup.find('div', class_='section-content')
+        comment_section = soup.find("div", class_="section-content")
         if comment_section:
             comment_section.decompose()
 
         # Remove tables
-        for table_div in soup.find_all('div', class_='tableWrapper'):
+        for table_div in soup.find_all("div", class_="tableWrapper"):
             table_div.decompose()
 
         # Remove figures
-        for figure in soup.find_all('figure'):
+        for figure in soup.find_all("figure"):
             figure.decompose()
 
         # Remove specific blockquotes
-        for blockquote in soup.find_all('blockquote'):
+        for blockquote in soup.find_all("blockquote"):
             if blockquote.find(string="Share your thoughts!"):
                 blockquote.decompose()
 
         # Remove all headers (h1 to h6)
-        for header in soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']):
+        for header in soup.find_all(["h1", "h2", "h3", "h4", "h5", "h6"]):
             header.decompose()
 
         # Now, get the modified HTML
@@ -77,7 +77,7 @@ def clean_text(html_content):
                 content.append(paragraph.text)
 
         # Join with proper spacing
-        text = '\n\n'.join(content)
+        text = "\n\n".join(content)
 
         print(f"Final cleaned text length: {len(text)}")
         print(f"First 100 characters: {text[:100]}...")
@@ -99,12 +99,21 @@ def print_readability_metrics(text):
         ("Flesch-Kincaid Grade", scireadability.flesch_kincaid_grade(text)),
         ("SMOG Index", scireadability.smog_index(text)),
         ("Coleman-Liau Index", scireadability.coleman_liau_index(text)),
-        ("Automated Readability Index", scireadability.automated_readability_index(text)),
-        ("Dale-Chall Readability Score", scireadability.dale_chall_readability_score(text)),
-        ("Readability Consensus", scireadability.text_standard(text, float_output=True)),
+        (
+            "Automated Readability Index",
+            scireadability.automated_readability_index(text),
+        ),
+        (
+            "Dale-Chall Readability Score",
+            scireadability.dale_chall_readability_score(text),
+        ),
+        (
+            "Readability Consensus",
+            scireadability.text_standard(text, float_output=True),
+        ),
         ("Word Count", scireadability.lexicon_count(text)),
         ("Sentence Count", scireadability.sentence_count(text)),
-        ("Average Syllables per Word", scireadability.avg_syllables_per_word(text))
+        ("Average Syllables per Word", scireadability.avg_syllables_per_word(text)),
     ]
 
     for metric_name, value in metrics:
@@ -121,12 +130,12 @@ def process_url(url, delay_seconds=5):
     try:
         # Fetch webpage
         print("Fetching webpage...")
-        response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
+        response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
         response.raise_for_status()
         print(f"Successfully fetched page (status code: {response.status_code})")
 
         # Decode the response content to a string
-        html_content = response.content.decode('utf-8')
+        html_content = response.content.decode("utf-8")
 
         # Extract and clean text
         clean_content = clean_text(html_content)
@@ -140,8 +149,9 @@ def process_url(url, delay_seconds=5):
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Calculate readability metrics for a webpage.')
-    parser.add_argument('url', help='The URL of the webpage to analyze')
+        description="Calculate readability metrics for a webpage."
+    )
+    parser.add_argument("url", help="The URL of the webpage to analyze")
 
     args = parser.parse_args()
     process_url(args.url)

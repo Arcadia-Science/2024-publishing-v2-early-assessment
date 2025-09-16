@@ -27,6 +27,10 @@ contributors:
   given-names: Keith
   affiliation: Arcadia Science
   orcid: https://orcid.org/0000-0002-4157-6087
+ - family-names: Sandhu
+  given-names: Wasim
+  affiliation: Arcadia Science
+  orcid: https://orcid.org/0009-0004-5815-6283
 preferred-citation:
   title: "Early update on Arcadia publishing 2.0: Scientists are in charge, speed is an issue"
   type: article

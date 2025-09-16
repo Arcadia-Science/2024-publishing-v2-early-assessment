@@ -44,12 +44,13 @@ def analyze_feedback(file_path):
     df = pd.read_csv(file_path)
 
     # Convert date string to datetime, handling both AM/PM formats
-    df['Date submitted'] = pd.to_datetime(df['Date submitted'], format='%m/%d/%Y %I:%M%p',
-                                          errors='coerce')
+    df["Date submitted"] = pd.to_datetime(
+        df["Date submitted"], format="%m/%d/%Y %I:%M%p", errors="coerce"
+    )
 
     # Basic counts by version
     total_responses = len(df)
-    version_counts = df['Publishing version (from Pub)'].value_counts()
+    version_counts = df["Publishing version (from Pub)"].value_counts()
 
     print("Overall Statistics:")
     print(f"Total responses: {total_responses}")
@@ -59,10 +60,10 @@ def analyze_feedback(file_path):
 
     # Analysis for each question
     questions = [
-        'How straightforward was this pub?',
-        'Could this pub be useful in your own work?',
-        'Were you able to find all the information you\'d need to assess or reuse this work?',
-        'Does the evidence presented support the claims'
+        "How straightforward was this pub?",
+        "Could this pub be useful in your own work?",
+        "Were you able to find all the information you'd need to assess or reuse this work?",
+        "Does the evidence presented support the claims",
     ]
 
     print("\nDetailed Analysis by Version:")
@@ -72,19 +73,22 @@ def analyze_feedback(file_path):
         print(f"\n{question}")
 
         # Calculate total responses for each version
-        total_by_version = df.groupby('Publishing version (from Pub)').size()
+        total_by_version = df.groupby("Publishing version (from Pub)").size()
 
         # Calculate non-null responses for each version
-        valid_responses = df.groupby('Publishing version (from Pub)')[question].count()
+        valid_responses = df.groupby("Publishing version (from Pub)")[question].count()
 
         # Calculate response rates
         response_rates = (valid_responses / total_by_version * 100).round(1)
 
         # Create a crosstab for raw counts and percentages
-        raw_counts = pd.crosstab(df['Publishing version (from Pub)'], df[question])
-        percentages = pd.crosstab(df['Publishing version (from Pub)'],
-                                  df[question],
-                                  normalize='index') * 100
+        raw_counts = pd.crosstab(df["Publishing version (from Pub)"], df[question])
+        percentages = (
+            pd.crosstab(
+                df["Publishing version (from Pub)"], df[question], normalize="index"
+            )
+            * 100
+        )
 
         print("\nBreakdown by response:")
         # Print combined table with counts and percentages
@@ -94,7 +98,9 @@ def analyze_feedback(file_path):
             for column in raw_counts.columns:
                 count = raw_counts.loc[version, column]
                 pct = percentages.loc[version, column]
-                print(f"  {column}: {format_count_and_percentage(count, version_total)}")
+                print(
+                    f"  {column}: {format_count_and_percentage(count, version_total)}"
+                )
 
         print("\nResponse rates:")
         for version in response_rates.index:
@@ -105,8 +111,8 @@ def analyze_feedback(file_path):
     # Temporal analysis
     print("\nTemporal Analysis:")
     print("-" * 50)
-    df['month_year'] = df['Date submitted'].dt.to_period('M')
-    monthly_counts = pd.crosstab(df['month_year'], df['Publishing version (from Pub)'])
+    df["month_year"] = df["Date submitted"].dt.to_period("M")
+    monthly_counts = pd.crosstab(df["month_year"], df["Publishing version (from Pub)"])
 
     print("\nMonthly submission counts (last 10 months):")
     last_10_months = monthly_counts.tail(10)
@@ -124,10 +130,15 @@ def analyze_feedback(file_path):
     total_avg = avg_monthly.sum()
     for version, avg in avg_monthly.items():
         print(
-            f"{version}: {avg:.1f} per month ({(avg / total_avg * 100):.1f}% of monthly average) " +
-            f"across {months_with_data[version]} months with data")
+            f"{version}: {avg:.1f} per month ({(avg / total_avg * 100):.1f}% of monthly average) "
+            + f"across {months_with_data[version]} months with data"
+        )
 
 
 if __name__ == "__main__":
-    filepath = sys.argv[1] if len(sys.argv) > 1 else "data/pub_feedback_form_responses.csv"
+    filepath = (
+        sys.argv[1]
+        if len(sys.argv) > 1
+        else ("../../data/202412_original_pub/pub_feedback_form_responses.csv")
+    )
     analyze_feedback(filepath)
