@@ -23,7 +23,7 @@ This repo contains two main directories: `data` and `scripts`. Within these dire
 
 ## Scripts
 
-### `scripts/original_pub/calculate_basic_pub_stats.py`
+### `scripts/202412_original_pub/calculate_basic_pub_stats.py`
 
 > Note: table 1 in the pub displays 'First time pub onboarding' as a service that has been requested at least two times.
 > This script will return '1' for this service, although it has been requested twice. This is because that service can be
@@ -37,7 +37,7 @@ Analyzes basic publication metrics including:
 - Flesch Reading Ease scores
 - Pub team service requests
 
-### `scripts/original_pub/comment_impacts.py`
+### `scripts/202412_original_pub/comment_impacts.py`
 
 > Note: the included `comment_impacts.csv` file is more up-to-date than the one used in the pub, so you may note slight differences in impact distribution.
 
@@ -47,7 +47,7 @@ Visualizes and analyzes comment impacts with:
 - Configurable visualization options (pie/donut/bar charts) and multiple grouping methods for impact categories
 - Summary statistics
 
-### `scripts/original_pub/feedback_form_basic_stats.py`
+### `scripts/202412_original_pub/feedback_form_basic_stats.py`
 
 > Note: the included `pub_feedback_form.csv` file is more up-to-date than the one used to report in the pub. You may notice a small difference in feedback values.
 
@@ -56,7 +56,7 @@ Processes publication feedback survey responses:
 - Question-by-question analysis and comparison
 - Monthly submission patterns
 
-### `scripts/original_pub/pub_readability_stats.py`
+### `scripts/202412_original_pub/pub_readability_stats.py`
 
 >Note: we used [scireadability](https://github.com/robert-roth/scireadability), a derivative of textstat with more accurate syllable counting for our pubs.
 
@@ -64,7 +64,7 @@ Web scraping tool, specifically for Arcadia Science pubs, for readability analys
 - Multiple readability metrics (Flesch, SMOG, Coleman-Liau, etc.)
 - Content extraction and cleaning
 
-### `scripts/update_202509/calculate_basic_pub_stats.py`
+### `scripts/202509_update/calculate_basic_pub_stats.py`
 
 Analyzes basic pub stats, compares them to v1.0 and to the initial v2.0 pubs that we reported on in the original pub, and prints them. Tests include:
 - Calculates and prints descriptive stats (n, mean/SD, 95% CI for mean, median/IQR)
@@ -157,11 +157,18 @@ python scripts/202412_original_pub/comment_impacts.py data/202412_original_pub/c
 python scripts/202412_original_pub/feedback_form_basic_stats.py data/202412_original_pub/pub_feedback_form_responses.csv
 ```
 
+The 202509 update scripts use hardcoded paths and should be run from the repo root:
+
+```sh
+python scripts/202509_update/calculate_basic_pub_stats.py
+python scripts/202509_update/feedback_form_basic_stats.py
+```
+
 The `pub_readability_stats.py` script requires a URL to an Arcadia Science pub. 
 These URLs have the format `https://research.arcadiascience.com/pub/<pub-slug>`.
 
 For example:
 
 ```sh
-python scripts/pub_readability_stats.py https://research.arcadiascience.com/pub/method-circular-dna-id
+python scripts/202412_original_pub/pub_readability_stats.py https://research.arcadiascience.com/pub/method-circular-dna-id
 ```
