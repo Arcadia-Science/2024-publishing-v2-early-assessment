@@ -16,7 +16,7 @@ numpy==2.2.0
 packaging==24.2
 pandas==2.2.3
 requests==2.32.4
-setuptools==78.1.1
+setuptools==84.1.0
 six==1.17.0
 scireadability==2.0.1
 urllib3==2.5.0
